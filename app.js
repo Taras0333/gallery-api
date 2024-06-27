@@ -5,6 +5,9 @@ const helmet = require("helmet");
 const cors = require("cors");
 const xss = require("xss-clean");
 const limiter = require("express-rate-limit");
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const endpointsDoc = YAML.load("./swagger.yaml");
 
 const propertiesRoute = require("./routes/properties");
 const authRoute = require("./routes/auth");
@@ -30,10 +33,13 @@ server.use(
   })
 );
 
+// swager
+
 // routes
 server.use("/api/v1/auth", authRoute);
 server.use("/api/v1/users", usersRoute);
 server.use("/api/v1/properties", propertiesRoute);
+server.use("/swagger", swaggerUI.serve, swaggerUI.setup(endpointsDoc));
 
 // errors handle
 server.use(notFound);
