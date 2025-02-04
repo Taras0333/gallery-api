@@ -24,12 +24,12 @@ server.use(express.json())
 server.use(helmet())
 server.use(cors())
 server.use(xss())
-server.use(
-  limiter({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
-  })
-)
+// server.use(
+//   limiter({
+//     windowMs: 15 * 60 * 1000,
+//     limit: 100,
+//   })
+// )
 
 // routes
 server.use('/api/v1/auth', authRoute)
