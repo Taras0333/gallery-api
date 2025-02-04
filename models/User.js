@@ -1,59 +1,68 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const validator = require('validator')
 
-const Property = require("./Property");
-
-const userSchema = new mongoose.Schema({
-  firstName: {
+const UserSchema = new mongoose.Schema({
+  name: {
     type: String,
-    required: true,
-    minlength: [1, "Thr first name can not be shorter then 1 character"],
+    required: [true, 'Please provide name'],
+    minlength: 3,
+    maxlength: 50,
   },
-  lastName: {
+  email: {
     type: String,
-    required: true,
-    minlength: [1, "Thr last name can not be shorter then 1 character"],
     unique: true,
-  },
-  age: {
-    type: Number,
-    required: [true, "The age is required"],
-  },
-  company: {
-    type: String,
-  },
-  properties: {
-    type: [mongoose.Types.ObjectId],
+    required: [true, 'Please provide email'],
+    validate: {
+      validator: validator.isEmail,
+      message: 'Please provide valid email',
+    },
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
-    minlength: [6, "Password sould be biger than 6 characters"],
-    maxlength: [20, "Password sould be less than 20 characters"],
+    required: [true, 'Please provide password'],
+    minlength: 6,
   },
-});
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
+  verificationToken: String,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verified: Date,
+  passwordToken: {
+    type: String,
+  },
+  passwordTokenExpirationDate: {
+    type: Date,
+  },
+})
 
-userSchema.pre("save", async function () {
-  const salt = await bcrypt.genSalt(10);
+UserSchema.pre('save', async function () {
+  if (!this.isModified('password')) return
+  const salt = await bcrypt.genSalt(10)
+  this.password = await bcrypt.hash(this.password, salt)
+})
 
-  this.password = await bcrypt.hash(this.password, salt);
-});
+UserSchema.methods.getFullName = function () {
+  return `${this.firstName} ${this.lastName}`
+}
 
-userSchema.methods.getFullName = function () {
-  return `${this.firstName} ${this.lastName}`;
-};
-
-userSchema.methods.generateJWT = function () {
-  const { JWT_EXPIRES, JWT_SECRET } = process.env;
+UserSchema.methods.generateJWT = function () {
+  const { JWT_EXPIRES, JWT_SECRET } = process.env
   return jwt.sign({ id: this._id, fullName: this.getFullName() }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES,
-  });
-};
+  })
+}
 
-userSchema.methods.validatePassword = async function (passwordToValidate) {
-  const isValid = await bcrypt.compare(passwordToValidate, this.password);
-  return isValid;
-};
+UserSchema.methods.validatePassword = async function (passwordToValidate) {
+  const isValid = await bcrypt.compare(passwordToValidate, this.password)
+  return isValid
+}
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', UserSchema)

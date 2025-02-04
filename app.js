@@ -1,61 +1,55 @@
-require("dotenv").config();
-require("express-async-errors");
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-const xss = require("xss-clean");
-const limiter = require("express-rate-limit");
-const swaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
-const endpointsDoc = YAML.load("./swagger.yaml");
+require('dotenv').config()
+require('express-async-errors')
+const express = require('express')
+const helmet = require('helmet')
+const cors = require('cors')
+const xss = require('xss-clean')
+const limiter = require('express-rate-limit')
+const swaggerUI = require('swagger-ui-express')
+const YAML = require('yamljs')
+const endpointsDoc = YAML.load('./swagger.yaml')
 
-const propertiesRoute = require("./routes/properties");
-const authRoute = require("./routes/auth");
-const usersRoute = require("./routes/users");
+const authRoute = require('./routes/auth')
 
-const errorHandler = require("./middleware/errorHandler");
-const notFound = require("./middleware/notFound");
+const errorHandler = require('./middleware/errorHandler')
+const notFound = require('./middleware/notFound')
 
-const connectDB = require("./db/connection");
-const server = express();
+const connectDB = require('./db/connection')
+const server = express()
 
 //middleware
-server.use(express.json());
+server.use(express.json())
 
 // security
-server.use(helmet());
-server.use(cors());
-server.use(xss());
+server.use(helmet())
+server.use(cors())
+server.use(xss())
 server.use(
   limiter({
     windowMs: 15 * 60 * 1000,
     limit: 100,
   })
-);
-
-// swager
+)
 
 // routes
-server.use("/api/v1/auth", authRoute);
-server.use("/api/v1/users", usersRoute);
-server.use("/api/v1/properties", propertiesRoute);
-server.use("/swagger", swaggerUI.serve, swaggerUI.setup(endpointsDoc));
+server.use('/api/v1/auth', authRoute)
+server.use('/swagger', swaggerUI.serve, swaggerUI.setup(endpointsDoc))
 
 // errors handle
-server.use(notFound);
-server.use(errorHandler);
+server.use(notFound)
+server.use(errorHandler)
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5001
 
 const spinUpServer = async () => {
   try {
-    await connectDB(process.env.MONGO_URI);
-    console.log("db is connected");
+    await connectDB(process.env.MONGO_URI)
+    console.log('db is connected')
     server.listen(port, () => {
-      console.log(`The server is listening to port: ${port}`);
-    });
+      console.log(`The server is listening to port: ${port}`)
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
-spinUpServer();
+}
+spinUpServer()

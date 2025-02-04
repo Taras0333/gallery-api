@@ -1,307 +1,46 @@
 openapi: 3.0.0
 info:
-  title: PROPERTIES_API
-  contact: {}
-  version: "1.0"
+  title: back-end_pet
+  version: 1.0.0
 servers:
-  - url: https://propertiso.onrender.com/api/v1
-    variables: {}
-paths:
-  /properties/all-properties:
-    get:
-      tags:
-        - properties
-      summary: Get all properties
-      operationId: getallproperties
-      parameters:
-        - name: fields
-          in: query
-          description: ""
-          required: true
-          style: form
-          explode: true
-          schema:
-            type: string
-            example: title numberOfRooms
-        - name: limit
-          in: query
-          description: ""
-          required: true
-          style: form
-          explode: true
-          schema:
-            type: integer
-            format: int32
-            example: 5
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-  /properties/agent-properties/{agentId}:
-    get:
-      tags:
-        - properties
-      summary: Get agent properties
-      operationId: getagentproperties
-      parameters:
-        - in: path
-          name: agentId
-          schema:
-            type: number
-          required: true
-          description: Numeric ID of the agent to get
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-  /properties:
-    post:
-      tags:
-        - properties
-      summary: Create property by user
-      operationId: createpropertybyuser
-      parameters: []
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "#/components/schemas/createpropertybyuserrequest"
-                - example:
-                    title: Appartment in Kherson str.Vyhovskoho 43/43
-                    description: Nice place to stay with your family. Please call me!!!!!!!!!!!!
-                    numberOfRooms: 2
-            example:
-              title: Appartment in Kherson str.Vyhovskoho 43/43
-              description: Nice place to stay with your family. Please call me!!!!!!!!!!!!
-              numberOfRooms: 2
-        required: true
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security:
-        - bearer: []
-  /properties/{propertyId}:
-    get:
-      tags:
-        - properties
-      summary: Get agent property
-      operationId: getusersproperty
-      parameters:
-        - in: path
-          name: propertyId
-          schema:
-            type: number
-          required: true
-          description: Numeric ID of the property to get
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-    patch:
-      tags:
-        - properties
-      summary: Update agent property
-      operationId: updateusersproperty
-      parameters:
-        - in: path
-          name: propertyId
-          schema:
-            type: number
-          required: true
-          description: Numeric ID of the property to get
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "#/components/schemas/updateuserspropertyrequest"
-                - example:
-                    title: Lviv, str.Kulparkivska 8/80
-            example:
-              title: Lviv, str.Kulparkivska 8/80
-        required: true
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security:
-        - bearer: []
-    delete:
-      tags:
-        - properties
-      summary: Delete agent property
-      operationId: deleteusersproperty
-      parameters:
-        - in: path
-          name: propertyId
-          schema:
-            type: number
-          required: true
-          description: Numeric ID of the property to get
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security:
-        - bearer: []
-  /auth/login:
-    post:
-      tags:
-        - auth
-      summary: login user
-      operationId: loginuser
-      parameters: []
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "#/components/schemas/loginuserrequest"
-                - example:
-                    lastName: Khomyn
-                    password: taras_khomyn
-            example:
-              lastName: Khomyn
-              password: taras_khomyn
-        required: true
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-  /auth/register:
-    post:
-      tags:
-        - auth
-      summary: register user
-      operationId: registeruser
-      parameters: []
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              allOf:
-                - $ref: "#/components/schemas/registeruserrequest"
-                - example:
-                    firstName: Taras
-                    lastName: Khomyn
-                    age: 26
-                    password: taras_khomyn
-            example:
-              firstName: Taras
-              lastName: Khomyn
-              age: 26
-              password: taras_khomyn
-        required: true
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-  /users:
-    get:
-      tags:
-        - users
-      summary: get all users
-      operationId: getallusers
-      parameters: []
-      responses:
-        "200":
-          description: ""
-          headers: {}
-      deprecated: false
-      security: []
-components:
-  schemas:
-    createpropertybyuserrequest:
-      title: createpropertybyuserrequest
-      required:
-        - title
-        - description
-        - numberOfRooms
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
-        numberOfRooms:
-          type: integer
-          format: int32
-      example:
-        title: Appartment in Kherson str.Vyhovskoho 43/43
-        description: Nice place to stay with your family. Please call me!!!!!!!!!!!!
-        numberOfRooms: 2
-    updateuserspropertyrequest:
-      title: updateuserspropertyrequest
-      required:
-        - title
-      type: object
-      properties:
-        title:
-          type: string
-      example:
-        title: Lviv, str.Kulparkivska 8/80
-    loginuserrequest:
-      title: loginuserrequest
-      required:
-        - lastName
-        - password
-      type: object
-      properties:
-        lastName:
-          type: string
-        password:
-          type: string
-      example:
-        lastName: Khomyn
-        password: taras_khomyn
-    registeruserrequest:
-      title: registeruserrequest
-      required:
-        - firstName
-        - lastName
-        - age
-        - password
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        age:
-          type: integer
-          format: int32
-        password:
-          type: string
-      example:
-        firstName: Taras
-        lastName: Khomyn
-        age: 26
-        password: taras_khomyn
-  securitySchemes:
-    bearer:
-      type: http
-      scheme: bearer
-security: []
+  - url: http://localhost:5001
 tags:
-  - name: properties
   - name: auth
-  - name: users
+paths:
+  /api/v1/auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Lida
+                email: lida_petrivna67@gmail.com
+                password: lida123
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: lida_petrivna67@gmail.com
+                password: lida123
+      responses:
+        '202':
+          description: Successful response
+          content:
+            application/json: {}
