@@ -55,9 +55,13 @@ UserSchema.methods.getFullName = function () {
 
 UserSchema.methods.generateJWT = function () {
   const { JWT_EXPIRES, JWT_SECRET } = process.env
-  return jwt.sign({ id: this._id, fullName: this.getFullName() }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES,
-  })
+  return jwt.sign(
+    { id: this._id, fullName: this.getFullName(), pashalka: 'pisiun' },
+    JWT_SECRET,
+    {
+      expiresIn: JWT_EXPIRES,
+    }
+  )
 }
 
 UserSchema.methods.validatePassword = async function (passwordToValidate) {

@@ -3,7 +3,7 @@ info:
   title: back-end_pet
   version: 1.0.0
 servers:
-  - url: http://localhost:5001
+  - url: https://back-end-pet.onrender.com
 tags:
   - name: auth
 paths:
