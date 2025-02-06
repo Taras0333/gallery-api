@@ -4,11 +4,58 @@ const jwt = require('jsonwebtoken')
 const validator = require('validator')
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'Please provide name'],
-    minlength: 3,
-    maxlength: 50,
+    required: [true, 'Please provide First Name'],
+    minlength: [3, 'First Name should be longer then 3 characters'],
+    maxlength: [50, 'First Name is longer then 500 characters'],
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Please provide Last Name'],
+    minlength: [3, 'Last Name should be longer then 3 characters'],
+    maxlength: [50, 'Last Name is longer then 500 characters'],
+  },
+  nickName: {
+    type: String,
+    required: [true, 'Please provide Nick Name'],
+    minlength: [3, 'Nick Name should be longer then 3 characters'],
+    maxlength: [50, 'Nick Name is longer then 500 characters'],
+  },
+  company: {
+    type: String,
+    required: [true, 'Please provide Company Name'],
+    maxlength: [50, 'Company is longer then 500 characters'],
+  },
+  address: {
+    type: String,
+    maxlength: [100, 'Address is longer then 100 characters'],
+  },
+  postCode: {
+    type: String,
+    maxlength: [10, 'Post Code is longer then 10 characters'],
+    validate: {
+      validator: function (value) {
+        return validator.isPostalCode(value, 'any')
+      },
+      message: 'Please provide valid Post Code',
+    },
+  },
+  phone: {
+    type: String,
+    validate: {
+      validator: function (value) {
+        return validator.isMobilePhone(value, 'any', { strictMode: true })
+      },
+      message: 'Please provide valid Phone Number',
+    },
+  },
+  linkedIn: {
+    type: String,
+    validate: {
+      validator: validator.isURL,
+      message: 'Please provide valid LinkedIn URL',
+    },
   },
   email: {
     type: String,
@@ -22,24 +69,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide password'],
-    minlength: 6,
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'user'],
-    default: 'user',
-  },
-  verificationToken: String,
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  verified: Date,
-  passwordToken: {
-    type: String,
-  },
-  passwordTokenExpirationDate: {
-    type: Date,
+    minlength: [6, 'Password should be longer then 6 characters'],
   },
 })
 

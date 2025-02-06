@@ -4,7 +4,6 @@ info:
   version: 1.0.0
 servers:
   - url: https://back-end-pet.onrender.com
-  - url: http://localhost:5001
 tags:
   - name: auth
   - name: wakeUp
@@ -20,9 +19,16 @@ paths:
             schema:
               type: object
               example:
-                name: Lidia Petrivna
-                email: lida_petrivna67@gmail.com
-                password: lidochaka123
+                firstName: Biba
+                lastName: Boba
+                nickName: biba_0321
+                address: Guga str. Lviv, Ukraine
+                postCode: 79-021
+                phone: '+380930362479'
+                linkedIn: https://www.linkedin.com/in/b-ty/
+                company: Boba.inc
+                email: biba_boba@gmail.com
+                password: boba123
       responses:
         '201':
           description: Successful response
@@ -39,8 +45,8 @@ paths:
             schema:
               type: object
               example:
-                email: lida_petrivna67@gmail.com
-                password: lidochaka123
+                email: biba_boba@gmail.com
+                password: boba123
       responses:
         '202':
           description: Successful response
