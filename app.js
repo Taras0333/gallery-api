@@ -10,15 +10,18 @@ const YAML = require('yamljs')
 const endpointsDoc = YAML.load('./swagger.yaml')
 
 const authRoute = require('./routes/auth')
+const wakeUpRoute = require('./routes/wakeUp')
 
 const errorHandler = require('./middleware/errorHandler')
 const notFound = require('./middleware/notFound')
 
 const connectDB = require('./db/connection')
+const morgan = require('morgan')
 const server = express()
 
 //middleware
 server.use(express.json())
+server.use(morgan('tiny'))
 
 // security
 server.use(helmet())
@@ -33,6 +36,7 @@ server.use(
 
 // routes
 server.use('/api/v1/auth', authRoute)
+server.use('/api/v1/wake-up', wakeUpRoute)
 server.use('/swagger', swaggerUI.serve, swaggerUI.setup(endpointsDoc))
 
 // errors handle
