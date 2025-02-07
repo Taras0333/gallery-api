@@ -100,7 +100,7 @@ const login = async (req, res) => {
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
 
-  res.status(StatusCodes.ACCEPTED).json({ user, tokenUser })
+  res.status(StatusCodes.ACCEPTED).json({ user })
 }
 
 const logout = async (req, res) => {
