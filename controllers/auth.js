@@ -1,5 +1,9 @@
 const User = require('../models/User')
+const Token = require('../models/Token')
 const { StatusCodes } = require('http-status-codes')
+const crypto = require('crypto')
+const { attachCookiesToResponse } = require('../utils/jwt')
+const createTokenUser = require('../utils/createTokenUser')
 
 const { BadRequestError, UnAuthorizedError, CustomError } = require('../errors')
 
@@ -31,7 +35,13 @@ const register = async (req, res) => {
     throw new CustomError('Password is emply', StatusCodes.NOT_ACCEPTABLE)
   }
 
-  let user = await User.create({ ...body })
+  // const verificationToken = crypto.randomBytes(40).toString('hex')
+  let user = await User.create({
+    ...body,
+    verificationToken: '',
+    isVerified: true,
+    verified: Date.now(),
+  })
 
   user = await User.findById(user.id).select('-password')
 
@@ -57,16 +67,75 @@ const login = async (req, res) => {
   if (!isValidPassword) {
     throw new UnAuthorizedError('The password is wrong')
   }
-  const token = user.generateJWT()
+  if (!user.isVerified) {
+    throw new UnAuthorizedError('Please verify your email')
+  }
 
-  const id = user.id
+  const tokenUser = createTokenUser(user)
 
-  user = await User.findById(user.id).select('-password')
+  // create refresh token
+  let refreshToken = ''
+  // check for existing token
+  // const existingToken = await Token.findOne({ user: user._id })
 
-  res.status(StatusCodes.ACCEPTED).json({
-    user,
-    token,
-  })
+  // if (existingToken) {
+  //   const { isValid } = existingToken
+  //   if (!isValid) {
+  //     throw new UnauthenticatedError('Invalid Credentials')
+  //   }
+  //   refreshToken = existingToken.refreshToken
+  //   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
+  //   res.status(StatusCodes.OK).json({ user: tokenUser })
+  //   return
+  // }
+
+  refreshToken = crypto.randomBytes(40).toString('hex')
+  const userAgent = req.headers['user-agent']
+  const ip = req.ip
+  const userToken = { refreshToken, ip, userAgent, user: user._id }
+
+  await Token.create(userToken)
+
+  attachCookiesToResponse({ res, user: tokenUser, refreshToken })
+
+  res.status(StatusCodes.ACCEPTED).json({ user, tokenUser })
 }
 
-module.exports = { register, login }
+const logout = async (req, res) => {
+  // await Token.findOneAndDelete({ user: req.user.userId })
+
+  res.cookie('accessToken', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  })
+  res.cookie('refreshToken', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  })
+  res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
+}
+
+const verifyEmail = async (req, res) => {
+  const { verificationToken, email } = req.body
+  const user = await User.findOne({ email })
+
+  if (!user) {
+    throw new CustomError.UnauthenticatedError(
+      `There is no user with provided email: ${email}`
+    )
+  }
+
+  if (user.verificationToken !== verificationToken) {
+    throw new CustomError.UnauthenticatedError('Verification Failed')
+  }
+
+  user.isVerified = true
+  user.verified = Date.now()
+  user.verificationToken = ''
+
+  await user.save()
+
+  res.status(StatusCodes.OK).json({ msg: 'Verification was Successful' })
+}
+
+module.exports = { register, login, verifyEmail, logout }

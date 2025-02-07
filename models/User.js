@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const validator = require('validator')
 
 const UserSchema = new mongoose.Schema({
@@ -80,6 +80,12 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     minlength: [6, 'Password should be longer then 6 characters'],
   },
+  verificationToken: String,
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verified: Date,
 })
 
 UserSchema.pre('save', async function () {
@@ -92,16 +98,12 @@ UserSchema.methods.getFullName = function () {
   return `${this.firstName} ${this.lastName}`
 }
 
-UserSchema.methods.generateJWT = function () {
-  const { JWT_EXPIRES, JWT_SECRET } = process.env
-  return jwt.sign(
-    { id: this._id, fullName: this.getFullName(), pashalka: 'pisiun' },
-    JWT_SECRET,
-    {
-      expiresIn: JWT_EXPIRES,
-    }
-  )
-}
+// UserSchema.methods.generateJWT = function (payload) {
+//   const { JWT_EXPIRES, JWT_SECRET } = process.env
+//   return jwt.sign(payload, JWT_SECRET, {
+//     expiresIn: JWT_EXPIRES,
+//   })
+// }
 
 UserSchema.methods.validatePassword = async function (passwordToValidate) {
   const isValid = await bcrypt.compare(passwordToValidate, this.password)

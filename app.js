@@ -8,6 +8,7 @@ const limiter = require('express-rate-limit')
 const swaggerUI = require('swagger-ui-express')
 const YAML = require('yamljs')
 const endpointsDoc = YAML.load('./swagger.yaml')
+const cookieParser = require('cookie-parser')
 
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
@@ -22,11 +23,24 @@ const server = express()
 
 //middleware
 server.use(express.json())
+server.use(cookieParser(process.env.JWT_SECRET))
 server.use(morgan('tiny'))
 
 // security
 server.use(helmet())
-server.use(cors())
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:8080']
+server.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
+    credentials: true,
+  })
+)
 server.use(xss())
 server.use(
   limiter({
