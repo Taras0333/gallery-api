@@ -2,7 +2,7 @@ const User = require('../models/User')
 const { StatusCodes } = require('http-status-codes')
 
 const getAllUsers = async (_, res) => {
-  const users = await User.find({}).select('-password -__v')
+  const users = await User.find({}).select('-password')
 
   res.status(StatusCodes.OK).json({
     users,
@@ -13,7 +13,7 @@ const getUserById = async (req, res) => {
   const {
     params: { id },
   } = req
-  const user = await User.findById(id).select('-password -__v')
+  const user = await User.findById(id).select('-password')
 
   res.status(StatusCodes.OK).json({ user })
 }

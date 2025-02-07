@@ -108,4 +108,16 @@ UserSchema.methods.validatePassword = async function (passwordToValidate) {
   return isValid
 }
 
+UserSchema.virtual('id').get(function () {
+  return this._id.toHexString()
+})
+
+UserSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false, // Removes `__v`
+  transform: function (_, ret) {
+    delete ret._id // Remove `_id`
+  },
+})
+
 module.exports = mongoose.model('User', UserSchema)

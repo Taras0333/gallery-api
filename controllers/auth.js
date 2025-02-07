@@ -33,7 +33,7 @@ const register = async (req, res) => {
 
   let user = await User.create({ ...body })
 
-  user = await User.findById(user.id).select('-password -__v')
+  user = await User.findById(user.id).select('-password')
 
   res.status(StatusCodes.CREATED).json({
     user,
@@ -61,10 +61,10 @@ const login = async (req, res) => {
 
   const id = user.id
 
-  user = await User.findById(user.id).select('-password -__v -_id')
+  user = await User.findById(user.id).select('-password')
 
   res.status(StatusCodes.ACCEPTED).json({
-    user: { ...user, id },
+    user,
     token,
   })
 }
