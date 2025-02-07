@@ -28,7 +28,11 @@ server.use(morgan('tiny'))
 
 // security
 server.use(helmet())
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:8080']
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'https://back-end-pet.onrender.com',
+]
 server.use(
   cors({
     origin: function (origin, callback) {
