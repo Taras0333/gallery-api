@@ -30,32 +30,41 @@ const UserSchema = new mongoose.Schema({
   address: {
     type: String,
     maxlength: [100, 'Address is longer then 100 characters'],
+    default: null,
   },
   postCode: {
     type: String,
     maxlength: [10, 'Post Code is longer then 10 characters'],
     validate: {
       validator: function (value) {
+        if (value === null) return true
         return validator.isPostalCode(value, 'any')
       },
       message: 'Please provide valid Post Code',
     },
+    default: null,
   },
   phone: {
     type: String,
     validate: {
       validator: function (value) {
+        if (value === null) return true
         return validator.isMobilePhone(value, 'any', { strictMode: true })
       },
       message: 'Please provide valid Phone Number',
     },
+    default: null,
   },
   linkedIn: {
     type: String,
     validate: {
-      validator: validator.isURL,
+      validator: function (value) {
+        if (value === null) return true
+        return validator.isURL
+      },
       message: 'Please provide valid LinkedIn URL',
     },
+    default: null,
   },
   email: {
     type: String,

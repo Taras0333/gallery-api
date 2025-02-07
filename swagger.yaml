@@ -6,7 +6,8 @@ servers:
   - url: https://back-end-pet.onrender.com
 tags:
   - name: auth
-  - name: wakeUp
+  - name: wake up
+  - name: users
 paths:
   /api/v1/auth/register:
     post:
@@ -55,8 +56,28 @@ paths:
   /api/v1/wake-up:
     get:
       tags:
-        - wakeUp
-      summary: wakeUp
+        - wake up
+      summary: Wake Up
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users:
+    get:
+      tags:
+        - users
+      summary: Get All Users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/:id:
+    get:
+      tags:
+        - users
+      summary: Get User By Id
       responses:
         '200':
           description: Successful response

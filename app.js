@@ -10,6 +10,7 @@ const YAML = require('yamljs')
 const endpointsDoc = YAML.load('./swagger.yaml')
 
 const authRoute = require('./routes/auth')
+const usersRoute = require('./routes/users')
 const wakeUpRoute = require('./routes/wakeUp')
 
 const errorHandler = require('./middleware/errorHandler')
@@ -36,6 +37,7 @@ server.use(
 
 // routes
 server.use('/api/v1/auth', authRoute)
+server.use('/api/v1/users', usersRoute)
 server.use('/api/v1/wake-up', wakeUpRoute)
 server.use('/swagger', swaggerUI.serve, swaggerUI.setup(endpointsDoc))
 
