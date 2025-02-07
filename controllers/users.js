@@ -1,8 +1,6 @@
 const User = require('../models/User')
 const { StatusCodes } = require('http-status-codes')
-
 const removedFields = '-password -verified -isVerified -verificationToken'
-
 const getAllUsers = async (_, res) => {
   const users = await User.find({}).select('-password')
 
@@ -15,7 +13,9 @@ const getUserById = async (req, res) => {
   const {
     params: { id },
   } = req
-  const user = await User.findById(id).select(removedFields)
+  let user = await User.findById(id)
+
+  user = await User.findById(id).select(removedFields)
 
   res.status(StatusCodes.OK).json({ user })
 }

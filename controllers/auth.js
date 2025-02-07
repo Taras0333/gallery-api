@@ -7,6 +7,8 @@ const createTokenUser = require('../utils/createTokenUser')
 
 const { BadRequestError, UnAuthorizedError, CustomError } = require('../errors')
 
+const removedFields = '-password -verified -isVerified -verificationToken'
+
 const register = async (req, res) => {
   const { body } = req
   const { firstName, lastName, nickName, company, email, password } = body
@@ -43,9 +45,7 @@ const register = async (req, res) => {
     verified: Date.now(),
   })
 
-  user = await User.findById(user.id).select(
-    '-password -verified -isVerified -verificationToken'
-  )
+  user = await User.findById(user.id)
 
   res.status(StatusCodes.CREATED).json({
     user,
@@ -58,9 +58,7 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new BadRequestError(`Please provide email and password`)
   }
-  let user = await User.findOne({ email }).select(
-    '-password -verified -isVerified -verificationToken'
-  )
+  let user = await User.findOne({ email })
 
   if (!user) {
     throw new BadRequestError(`There is no user with provided email: ${email}`)
@@ -101,6 +99,8 @@ const login = async (req, res) => {
   await Token.create(userToken)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
+
+  user = await User.findById(user.id).select(removedFields)
 
   res.status(StatusCodes.ACCEPTED).json({ user })
 }
