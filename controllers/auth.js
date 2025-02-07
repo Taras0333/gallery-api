@@ -58,7 +58,9 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new BadRequestError(`Please provide email and password`)
   }
-  let user = await User.findOne({ email })
+  let user = await User.findOne({ email }).select(
+    '-password -verified -isVerified -verificationToken'
+  )
 
   if (!user) {
     throw new BadRequestError(`There is no user with provided email: ${email}`)
