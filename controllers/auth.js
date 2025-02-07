@@ -42,7 +42,6 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body
-  console.log(email, password)
 
   if (!email || !password) {
     throw new BadRequestError(`Please provide email and password`)
@@ -60,10 +59,12 @@ const login = async (req, res) => {
   }
   const token = user.generateJWT()
 
-  user = await User.findById(user.id).select('-password -__v')
+  const id = user.id
+
+  user = await User.findById(user.id).select('-password -__v -_id')
 
   res.status(StatusCodes.ACCEPTED).json({
-    user,
+    user: { ...user, id },
     token,
   })
 }
