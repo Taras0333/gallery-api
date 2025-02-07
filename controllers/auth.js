@@ -46,7 +46,7 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new BadRequestError(`Please provide email and password`)
   }
-  const user = await User.findOne({ email }).select('-password -__v')
+  let user = await User.findOne({ email })
 
   if (!user) {
     throw new BadRequestError(`There is no user with provided email: ${email}`)
@@ -58,6 +58,8 @@ const login = async (req, res) => {
     throw new UnAuthorizedError('The password is wrong')
   }
   const token = user.generateJWT()
+
+  user = await User.findById(user.id).select('-password -__v')
 
   res.status(StatusCodes.ACCEPTED).json({
     user,
