@@ -1,21 +1,52 @@
-const { UnAuthorizedError } = require("../errors");
-const jwt = require("jsonwebtoken");
+const CustomError = require('../errors')
+const { isTokenValid, attachCookiesToResponse } = require('../utils/jwt')
+const Token = require('../models/Token')
 
-const auth = (req, res, next) => {
-  const { headers } = req;
-  if (!headers.authorization || !headers.authorization.startsWith("Bearer ")) {
-    throw new UnAuthorizedError("Please provide credentials");
-  }
+const authenticateUser = async (req, res, next) => {
+  const { refreshToken, accessToken } = req.signedCookies
 
   try {
-    const token = headers.authorization.split(" ")[1].trim();
+    if (accessToken) {
+      const payload = isTokenValid(accessToken)
+      req.user = payload.user
+      return next()
+    }
+    const payload = isTokenValid(refreshToken)
 
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userName: payload.fullName, userId: payload.id };
-    next();
+    const existingToken = await Token.findOne({
+      user: payload.user.userId,
+      refreshToken: payload.refreshToken,
+    })
+
+    if (!existingToken || !existingToken?.isValid) {
+      throw new CustomError.UnauthenticatedError('Authentication Invalid')
+    }
+
+    attachCookiesToResponse({
+      res,
+      user: payload.user,
+      refreshToken: existingToken.refreshToken,
+    })
+
+    req.user = payload.user
+    next()
   } catch (error) {
-    throw new UnAuthorizedError("JWT token is invalid or missing");
+    throw new CustomError.UnauthenticatedError('Authentication Invalid')
   }
-};
+}
 
-module.exports = auth;
+// const authorizePermissions = (...roles) => {
+//   return (req, res, next) => {
+//     if (!roles.includes(req.user.role)) {
+//       throw new CustomError.UnauthorizedError(
+//         'Unauthorized to access this route'
+//       )
+//     }
+//     next()
+//   }
+// }
+
+module.exports = {
+  authenticateUser,
+  // authorizePermissions,
+}

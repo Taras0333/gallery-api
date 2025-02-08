@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const Token = require('../models/Token')
+// const Token = require('../models/Token')
 const { StatusCodes } = require('http-status-codes')
 const crypto = require('crypto')
 const { attachCookiesToResponse } = require('../utils/jwt')
@@ -78,7 +78,7 @@ const login = async (req, res) => {
   // create refresh token
   let refreshToken = ''
   // check for existing token
-  // const existingToken = await Token.findOne({ user: user._id })
+  // const existingToken = await Token.findOne({ user: user.id })
 
   // if (existingToken) {
   //   const { isValid } = existingToken
@@ -92,11 +92,11 @@ const login = async (req, res) => {
   // }
 
   refreshToken = crypto.randomBytes(40).toString('hex')
-  const userAgent = req.headers['user-agent']
-  const ip = req.ip
-  const userToken = { refreshToken, ip, userAgent, user: user._id }
+  // const userAgent = req.headers['user-agent']
+  // const ip = req.ip
+  // const userToken = { refreshToken, ip, userAgent, user: user.id }
 
-  await Token.create(userToken)
+  // await Token.create(userToken)
 
   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
 

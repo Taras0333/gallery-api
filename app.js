@@ -30,9 +30,11 @@ server.use(morgan('tiny'))
 server.use(helmet())
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://localhost:3000',
   'http://localhost:8080',
+  'https://localhost:8080',
+  'https://networker-delta.vercel.app',
   'https://back-end-pet.onrender.com',
-  'https://networker-delta.vercel.app/',
 ]
 server.use(
   cors({
