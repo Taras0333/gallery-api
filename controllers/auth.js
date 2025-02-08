@@ -109,11 +109,11 @@ const logout = async (req, res) => {
   // await Token.findOneAndDelete({ user: req.user.userId })
 
   res.cookie('accessToken', '0', {
-    httpOnly: true,
+    httpOnly: false,
     expires: new Date(Date.now()),
   })
   res.cookie('refreshToken', '0', {
-    httpOnly: true,
+    httpOnly: false,
     expires: new Date(Date.now()),
   })
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
