@@ -18,6 +18,7 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
     httpOnly: false,
     secure: false,
     signed: false,
+    sameSite: 'none',
     expires: new Date(Date.now() + oneDay),
   })
 
@@ -25,6 +26,7 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
     httpOnly: false,
     secure: false,
     signed: false,
+    sameSite: 'none',
     expires: new Date(Date.now() + longerExp),
   })
 }
