@@ -45,7 +45,7 @@ const register = async (req, res) => {
     verified: Date.now(),
   })
 
-  user = await User.findById(user.id)
+  user = await User.findById(user.id).select(removedFields)
 
   res.status(StatusCodes.CREATED).json({
     user,
