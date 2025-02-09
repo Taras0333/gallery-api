@@ -24,7 +24,7 @@ const authenticateUser = async (req, res, next) => {
 
     attachCookiesToResponse({
       res,
-      isLocalCall: req.hostname,
+      domain: req.headers['origin'],
       user: payload.user,
       refreshToken: existingToken.refreshToken,
     })

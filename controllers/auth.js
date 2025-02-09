@@ -86,7 +86,7 @@ const login = async (req, res) => {
   //     throw new UnauthenticatedError('Invalid Credentials')
   //   }
   //   refreshToken = existingToken.refreshToken
-  //   attachCookiesToResponse({ res, isLocalCall: req.hostname, user: tokenUser, refreshToken })
+  //   attachCookiesToResponse({ res, domain: req.headers['origin'], user: tokenUser, refreshToken })
   //   res.status(StatusCodes.OK).json({ user: tokenUser })
   //   return
   // }
@@ -100,7 +100,7 @@ const login = async (req, res) => {
 
   attachCookiesToResponse({
     res,
-    isLocalCall: req.hostname,
+    domain: req.headers['origin'],
     user: tokenUser,
     refreshToken,
   })
