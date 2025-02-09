@@ -118,6 +118,7 @@ const logout = async (req, res) => {
     secure: process.env.NODE_ENV === 'production',
     signed: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now()),
   })
   res.cookie('refreshToken', '0', {
@@ -125,11 +126,13 @@ const logout = async (req, res) => {
     secure: process.env.NODE_ENV === 'production',
     signed: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now()),
   })
   res.cookie('auth', 'inactive', {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   })
 
