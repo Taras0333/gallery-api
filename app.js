@@ -23,7 +23,7 @@ const server = express()
 
 //middleware
 server.use(express.json())
-// server.use(cookieParser(process.env.JWT_SECRET))
+server.use(cookieParser(process.env.JWT_SECRET))
 server.use(morgan('tiny'))
 
 // security

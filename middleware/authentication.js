@@ -5,7 +5,7 @@ const Token = require('../models/Token')
 const UnauthenticatedError = require('../errors/UnAuthorizedError')
 
 const authenticateUser = async (req, res, next) => {
-  const { refreshToken, accessToken } = req.cookies
+  const { refreshToken, accessToken } = req.signedCookies
 
   try {
     if (accessToken) {
