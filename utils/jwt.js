@@ -7,7 +7,7 @@ const createJWT = ({ payload }) => {
   return token
 }
 
-const attachCookiesToResponse = ({ res, user, refreshToken }) => {
+const attachCookiesToResponse = ({ res, isLocalCall, user, refreshToken }) => {
   const accessTokenJWT = createJWT({ payload: { user } })
   const refreshTokenJWT = createJWT({ payload: { user, refreshToken } })
 
@@ -16,19 +16,11 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 
   res.cookie('accessToken', accessTokenJWT, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    signed: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: new Date(Date.now() + oneDay),
-  })
-
-  res.cookie('accessToken', accessTokenJWT, {
-    httpOnly: true,
     secure:
-      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost',
+      process.env.NODE_ENV === 'production' && isLocalCall !== 'localhost',
     signed: true,
     sameSite:
-      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost'
+      process.env.NODE_ENV === 'production' && isLocalCall !== 'localhost'
         ? 'none'
         : 'lax',
     expires: new Date(Date.now() + oneDay),
@@ -37,10 +29,10 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
   res.cookie('refreshToken', refreshTokenJWT, {
     httpOnly: true,
     secure:
-      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost',
+      process.env.NODE_ENV === 'production' && isLocalCall !== 'localhost',
     signed: true,
     sameSite:
-      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost'
+      process.env.NODE_ENV === 'production' && isLocalCall !== 'localhost'
         ? 'none'
         : 'lax',
     expires: new Date(Date.now() + longerExp),
