@@ -130,7 +130,7 @@ const logout = async (req, res) => {
   res.cookie('auth', 'inactive', {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: new Date(Date.now()),
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   })
 
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
