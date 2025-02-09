@@ -19,19 +19,19 @@ const attachCookiesToResponse = ({ res, domain, user, refreshToken }) => {
 
   res.cookie('accessToken', accessTokenJWT, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' && isLocalCall,
+    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
     signed: true,
     sameSite:
-      process.env.NODE_ENV === 'production' && isLocalCall ? 'none' : 'lax',
+      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
     expires: new Date(Date.now() + oneDay),
   })
 
   res.cookie('refreshToken', refreshTokenJWT, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' && isLocalCall,
+    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
     signed: true,
     sameSite:
-      process.env.NODE_ENV === 'production' && isLocalCall ? 'none' : 'lax',
+      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
     expires: new Date(Date.now() + longerExp),
   })
 }
