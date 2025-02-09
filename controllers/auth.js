@@ -128,6 +128,8 @@ const logout = async (req, res) => {
     expires: new Date(Date.now()),
   })
   res.cookie('auth', 'inactive', {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     expires: new Date(Date.now()),
   })
 

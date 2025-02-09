@@ -31,6 +31,8 @@ const attachCookiesToResponse = ({ res, status, user, refreshToken }) => {
   })
 
   res.cookie('auth', status, {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     expires: new Date(Date.now() + longerExp),
   })
 }
