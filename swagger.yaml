@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: back-end_pet
+  title: back-networker-delta
   version: 1.0.0
 servers:
   - url: https://back-networker-delta.onrender.com
