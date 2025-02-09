@@ -9,6 +9,8 @@ const createJWT = ({ payload }) => {
 
 const attachCookiesToResponse = ({ res, domain, user, refreshToken }) => {
   const isLocalCall = domain.includes('localhost')
+  console.log('domain', domain, isLocalCall)
+
   const accessTokenJWT = createJWT({ payload: { user } })
   const refreshTokenJWT = createJWT({ payload: { user, refreshToken } })
 
