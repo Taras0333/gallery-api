@@ -86,7 +86,7 @@ const login = async (req, res) => {
   //     throw new UnauthenticatedError('Invalid Credentials')
   //   }
   //   refreshToken = existingToken.refreshToken
-  //   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
+  //   attachCookiesToResponse({ res,       status: 'active', user: tokenUser, refreshToken })
   //   res.status(StatusCodes.OK).json({ user: tokenUser })
   //   return
   // }
@@ -100,6 +100,7 @@ const login = async (req, res) => {
 
   attachCookiesToResponse({
     res,
+    status: 'active',
     user: tokenUser,
     refreshToken,
   })
@@ -126,6 +127,12 @@ const logout = async (req, res) => {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     expires: new Date(Date.now()),
   })
+  res.cookie('auth', 'inactive', {
+    signed: true,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    expires: new Date(Date.now()),
+  })
+
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
 }
 
