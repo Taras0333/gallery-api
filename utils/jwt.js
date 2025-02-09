@@ -22,11 +22,27 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
     expires: new Date(Date.now() + oneDay),
   })
 
+  res.cookie('accessToken', accessTokenJWT, {
+    httpOnly: true,
+    secure:
+      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost',
+    signed: true,
+    sameSite:
+      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost'
+        ? 'none'
+        : 'lax',
+    expires: new Date(Date.now() + oneDay),
+  })
+
   res.cookie('refreshToken', refreshTokenJWT, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure:
+      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost',
     signed: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite:
+      process.env.NODE_ENV === 'production' && req.hostname !== 'localhost'
+        ? 'none'
+        : 'lax',
     expires: new Date(Date.now() + longerExp),
   })
 }
