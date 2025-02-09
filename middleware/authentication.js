@@ -19,7 +19,7 @@ const authenticateUser = async (req, res, next) => {
     })
 
     if (!existingToken || !existingToken?.isValid) {
-      throw new CustomError.UnauthenticatedError('Authentication Invalid')
+      throw new UnauthenticatedError('Authentication Invalid')
     }
 
     attachCookiesToResponse({
@@ -31,14 +31,14 @@ const authenticateUser = async (req, res, next) => {
     req.user = payload.user
     next()
   } catch (error) {
-    throw new CustomError.UnauthenticatedError('Authentication Invalid')
+    throw new UnauthenticatedError('Authentication Invalid')
   }
 }
 
 // const authorizePermissions = (...roles) => {
 //   return (req, res, next) => {
 //     if (!roles.includes(req.user.role)) {
-//       throw new CustomError.UnauthorizedError(
+//       throw new UnauthorizedError(
 //         'Unauthorized to access this route'
 //       )
 //     }

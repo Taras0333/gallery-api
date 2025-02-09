@@ -129,13 +129,13 @@ const verifyEmail = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) {
-    throw new CustomError.UnauthenticatedError(
+    throw new UnauthenticatedError(
       `There is no user with provided email: ${email}`
     )
   }
 
   if (user.verificationToken !== verificationToken) {
-    throw new CustomError.UnauthenticatedError('Verification Failed')
+    throw new UnauthenticatedError('Verification Failed')
   }
 
   user.isVerified = true
