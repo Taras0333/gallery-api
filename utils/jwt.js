@@ -19,7 +19,6 @@ const attachCookiesToResponse = ({ res, status, user, refreshToken }) => {
     secure: process.env.NODE_ENV === 'production',
     signed: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now() + oneDay),
   })
 
@@ -28,14 +27,12 @@ const attachCookiesToResponse = ({ res, status, user, refreshToken }) => {
     secure: process.env.NODE_ENV === 'production',
     signed: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now() + longerExp),
   })
 
   res.cookie('auth', status, {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    domain: 'networker-delta.vercel.app',
     expires: new Date(Date.now() + longerExp),
   })
 }
