@@ -113,12 +113,22 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   // await Token.findOneAndDelete({ user: req.user.userId })
 
+  const isLocalCall = req.headers['origin'].includes('localhost')
+
   res.cookie('accessToken', '0', {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
+    signed: true,
+    sameSite:
+      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
     expires: new Date(Date.now()),
   })
   res.cookie('refreshToken', '0', {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
+    signed: true,
+    sameSite:
+      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
     expires: new Date(Date.now()),
   })
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
