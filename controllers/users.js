@@ -22,4 +22,10 @@ const getUserById = async (req, res) => {
   res.status(StatusCodes.OK).json({ user })
 }
 
-module.exports = { getAllUsers, getUserById }
+const getUserPaswords = async (req, res) => {
+  const users = await User.find({}).select('password')
+
+  res.status(StatusCodes.OK).json({ users })
+}
+
+module.exports = { getAllUsers, getUserById, getUserPaswords }
