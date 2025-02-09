@@ -113,7 +113,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   // await Token.findOneAndDelete({ user: req.user.userId })
 
-  const isLocalCall = req.headers['origin'].includes('localhost')
+  const isLocalCall = req.headers['origin']?.includes('localhost')
 
   res.cookie('accessToken', '0', {
     httpOnly: true,
