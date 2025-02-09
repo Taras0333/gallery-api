@@ -3,7 +3,7 @@ info:
   title: back-end_pet
   version: 1.0.0
 servers:
-  - url: https://back-end-pet.onrender.com
+  - url: https://back-networker-delta.onrender.com
 tags:
   - name: auth
   - name: wake up

@@ -34,7 +34,7 @@ const allowedOrigins = [
   'http://localhost:8080',
   'https://localhost:8080',
   'https://networker-delta.vercel.app',
-  'https://back-end-pet.onrender.com',
+  'https://back-networker-delta.onrender.com',
 ]
 server.use(
   cors({
