@@ -86,7 +86,7 @@ const login = async (req, res) => {
   //     throw new UnauthenticatedError('Invalid Credentials')
   //   }
   //   refreshToken = existingToken.refreshToken
-  //   attachCookiesToResponse({ res, domain: req.headers['origin'], user: tokenUser, refreshToken })
+  //   attachCookiesToResponse({ res, user: tokenUser, refreshToken })
   //   res.status(StatusCodes.OK).json({ user: tokenUser })
   //   return
   // }
@@ -100,7 +100,6 @@ const login = async (req, res) => {
 
   attachCookiesToResponse({
     res,
-    domain: req.headers['origin'],
     user: tokenUser,
     refreshToken,
   })
@@ -113,22 +112,13 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   // await Token.findOneAndDelete({ user: req.user.userId })
 
-  const isLocalCall = req.headers['origin']?.includes('localhost')
-
   res.cookie('accessToken', '0', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
-    signed: true,
-    sameSite:
-      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
+
     expires: new Date(0),
   })
   res.cookie('refreshToken', '0', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' && !isLocalCall,
-    signed: true,
-    sameSite:
-      process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
     expires: new Date(0),
   })
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
