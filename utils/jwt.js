@@ -23,7 +23,7 @@ const attachCookiesToResponse = ({ res, domain, user, refreshToken }) => {
     signed: true,
     sameSite:
       process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
-    expires: new Date(Date.now() + oneDay),
+    maxAge: oneDay,
   })
 
   res.cookie('refreshToken', refreshTokenJWT, {
@@ -32,7 +32,7 @@ const attachCookiesToResponse = ({ res, domain, user, refreshToken }) => {
     signed: true,
     sameSite:
       process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
-    expires: new Date(Date.now() + longerExp),
+    maxAge: longerExp,
   })
 }
 

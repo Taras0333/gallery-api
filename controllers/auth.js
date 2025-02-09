@@ -121,7 +121,7 @@ const logout = async (req, res) => {
     signed: true,
     sameSite:
       process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
-    expires: new Date(Date.now()),
+    maxAge: 0,
   })
   res.cookie('refreshToken', '0', {
     httpOnly: true,
@@ -129,7 +129,7 @@ const logout = async (req, res) => {
     signed: true,
     sameSite:
       process.env.NODE_ENV === 'production' && !isLocalCall ? 'none' : 'lax',
-    expires: new Date(Date.now()),
+    maxAge: 0,
   })
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
 }
