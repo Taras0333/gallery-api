@@ -9,6 +9,7 @@ const swaggerUI = require('swagger-ui-express')
 const YAML = require('yamljs')
 const endpointsDoc = YAML.load('./swagger.yaml')
 const cookieParser = require('cookie-parser')
+const { createServer } = require('@vercel/node')
 
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
@@ -72,10 +73,15 @@ const spinUpServer = async () => {
   try {
     await connectDB(process.env.MONGO_URI)
     console.log('db is connected')
+    if (process.env.NODE_ENV !== 'production') {
+      server.listen(port, () => {
+        console.log(`The server is listening to port: ${port}`)
+      })
+    }
   } catch (error) {
     console.log(error)
   }
 }
 spinUpServer()
 
-module.exports = server // Vercel
+module.exports = createServer(server) // Vercel
