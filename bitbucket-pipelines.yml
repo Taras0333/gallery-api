@@ -1,17 +1,27 @@
-#  Template NodeJS build
-
-#  This template allows you to validate your NodeJS code.
-#  The workflow allows running tests and code linting on the default branch.
-
-image: node:22
+image: node:22  # Встановлюємо образ для Node.js (можеш змінити версію за потреби)
 
 pipelines:
   default:
-    - parallel:
-        - step:
-            name: Build and Test
-            caches:
-              - node
-            script:
-              - npm install
+    - step:
+        name: Run Tests and Lint
+        caches:
+          - node
+        script:
+          - npm install
+
+  branches:
+    main:
+      - step:
+          name: Deploy to Vercel
+          script:
+            - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
+            - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
+    
+    'release/*':
+      - step:
+          name: Deploy to Vercel
+          script:
+            - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
+            - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
+
 
