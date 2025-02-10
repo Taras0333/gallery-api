@@ -14,6 +14,7 @@ pipelines:
       - step:
           name: Deploy to Vercel
           script:
+            - npm install -g vercel
             - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
             - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
     
@@ -21,6 +22,7 @@ pipelines:
       - step:
           name: Deploy to Vercel
           script:
+            - npm install -g vercel
             - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
             - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
 
