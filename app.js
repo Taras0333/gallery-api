@@ -72,11 +72,6 @@ const spinUpServer = async () => {
   try {
     await connectDB(process.env.MONGO_URI)
     console.log('db is connected')
-    if (process.env.NODE_ENV !== 'production') {
-      server.listen(port, () => {
-        console.log(`The server is listening to port: ${port}`)
-      })
-    }
   } catch (error) {
     console.log(error)
   }
