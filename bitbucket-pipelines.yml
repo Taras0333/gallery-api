@@ -1,4 +1,4 @@
-image: node:22  # Встановлюємо образ для Node.js (можеш змінити версію за потреби)
+image: node:22 # Встановлюємо образ для Node.js (можеш змінити версію за потреби)
 
 pipelines:
   default:
@@ -8,22 +8,3 @@ pipelines:
           - node
         script:
           - npm install
-
-  branches:
-    main:
-      - step:
-          name: Deploy to Vercel
-          script:
-            - npm install -g vercel
-            - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
-            - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
-    
-    'release/*':
-      - step:
-          name: Deploy to Vercel
-          script:
-            - npm install -g vercel
-            - curl -s https://vercel.com/download | bash  # Завантажуємо Vercel CLI
-            - vercel --token $VERCEL_TOKEN --prod  # Деплой на Vercel за допомогою Vercel CLI
-
-
