@@ -1,8 +1,7 @@
 const User = require('../models/User')
-// const Token = require('../models/Token')
 const { StatusCodes } = require('http-status-codes')
 const crypto = require('crypto')
-const { attachCookiesToResponse } = require('../utils/jwt')
+const { createJWT } = require('../utils/jwt')
 const createTokenUser = require('../utils/createTokenUser')
 
 const { BadRequestError, UnAuthorizedError, CustomError } = require('../errors')
@@ -37,7 +36,6 @@ const register = async (req, res) => {
     throw new CustomError('Password is emply', StatusCodes.NOT_ACCEPTABLE)
   }
 
-  // const verificationToken = crypto.randomBytes(40).toString('hex')
   let user = await User.create({
     ...body,
     verificationToken: '',
@@ -75,64 +73,14 @@ const login = async (req, res) => {
 
   const tokenUser = createTokenUser(user)
 
-  // create refresh token
-  let refreshToken = ''
-  // check for existing token
-  // const existingToken = await Token.findOne({ user: user.id })
-
-  // if (existingToken) {
-  //   const { isValid } = existingToken
-  //   if (!isValid) {
-  //     throw new UnauthenticatedError('Invalid Credentials')
-  //   }
-  //   refreshToken = existingToken.refreshToken
-  //   attachCookiesToResponse({ res,       status: 'active', user: tokenUser, refreshToken })
-  //   res.status(StatusCodes.OK).json({ user: tokenUser })
-  //   return
-  // }
-
-  refreshToken = crypto.randomBytes(40).toString('hex')
-  // const userAgent = req.headers['user-agent']
-  // const ip = req.ip
-  // const userToken = { refreshToken, ip, userAgent, user: user.id }
-
-  // await Token.create(userToken)
-
-  attachCookiesToResponse({
-    res,
-    status: 'active',
-    user: tokenUser,
-    refreshToken,
-  })
+  const token = createJWT({ user: { tokenUser } })
 
   user = await User.findById(user.id).select(removedFields)
 
-  res.status(StatusCodes.ACCEPTED).json({ user })
+  res.status(StatusCodes.ACCEPTED).json({ user, token })
 }
 
-const logout = async (req, res) => {
-  // await Token.findOneAndDelete({ user: req.user.userId })
-
-  res.cookie('accessToken', '0', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    signed: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: new Date(Date.now()),
-  })
-  res.cookie('refreshToken', '0', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    signed: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: new Date(Date.now()),
-  })
-  res.cookie('auth', 'inactive', {
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-  })
-
+const logout = async (_, res) => {
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
 }
 

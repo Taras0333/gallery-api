@@ -22,7 +22,7 @@ const getUserById = async (req, res) => {
   res.status(StatusCodes.OK).json({ user })
 }
 
-const getUserPaswords = async (req, res) => {
+const getUserPaswords = async (_, res) => {
   const users = await User.find({}).select('password')
 
   res.status(StatusCodes.OK).json({ users })

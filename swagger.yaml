@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  title: back-networker-delta
+  title: networker-back
   version: 1.0.0
 servers:
-  - url: https://back-networker-delta.onrender.com
+  - url: http://https://networker-back.onrender.com
 tags:
   - name: auth
   - name: wake up
@@ -28,8 +28,8 @@ paths:
                 phone: '+380930362479'
                 linkedIn: https://www.linkedin.com/in/b-ty/
                 company: Boba.inc
-                email: biba_boba@gmail.com
-                password: boba123
+                email: biba_boba1@gmail.com
+                password: boba1231
       responses:
         '201':
           description: Successful response
@@ -46,8 +46,8 @@ paths:
             schema:
               type: object
               example:
-                email: biba_boba@gmail.com
-                password: boba123
+                email: biba_boba1@gmail.com
+                password: boba1231
       responses:
         '202':
           description: Successful response
@@ -83,11 +83,21 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/v1/users/:id:
+  /api/v1/users/67a6160fe8c4009b3a15622e:
     get:
       tags:
         - users
       summary: Get User By Id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users/passwords:
+    get:
+      tags:
+        - users
+      summary: Get Users Passwords (privat)
       responses:
         '200':
           description: Successful response
