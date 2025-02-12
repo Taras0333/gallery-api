@@ -82,7 +82,7 @@ const login = async (req, res) => {
 
   const tokenUser = createTokenUser(user)
 
-  const token = createJWT({ user: { tokenUser } })
+  const token = createJWT({ user: { ...tokenUser } })
 
   user = await User.findById(user.id).select(removedFields)
 
@@ -142,4 +142,35 @@ const forgotPassword = async (req, res) => {
     .json({ message: 'New Password was sent to an email' })
 }
 
-module.exports = { register, login, verifyByEmail, forgotPassword, logout }
+const resetPassword = async (req, res) => {
+  const { password, confirmPassword } = req.body
+  const {
+    user: { email },
+  } = req
+
+  const user = await User.findOne({ email })
+
+  if (!user) {
+    throw new UnAuthorizedError(
+      `There is no user with provided email: ${email}`
+    )
+  }
+  if (password !== confirmPassword) {
+    throw new BadRequestError('Passwords do not match. Please try again')
+  }
+
+  user.password = password
+
+  await user.save()
+
+  res.status(StatusCodes.OK).json({ message: 'The Password was changed' })
+}
+
+module.exports = {
+  register,
+  login,
+  verifyByEmail,
+  forgotPassword,
+  resetPassword,
+  logout,
+}

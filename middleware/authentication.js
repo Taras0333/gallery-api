@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const Token = require('../models/Token')
 
 const UnAuthorizedError = require('../errors/UnAuthorizedError')
 
@@ -12,8 +11,9 @@ const authenticateUser = async (req, res, next) => {
   try {
     const token = headers.authorization.split(' ')[1].trim()
 
-    const payload = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = { firstName: payload.firstName, id: payload.id }
+    const { user } = jwt.verify(token, process.env.JWT_SECRET)
+
+    req.user = user
     next()
   } catch (error) {
     throw new UnAuthorizedError('JWT token is invalid or missing')
