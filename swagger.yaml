@@ -140,7 +140,7 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/v1/users/67a6160fe8c4009b3a15622e:
+  /api/v1/users/:id:
     get:
       tags:
         - users
