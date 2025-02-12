@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const { createJWT } = require('../utils/jwt')
 const createTokenUser = require('../utils/createTokenUser')
 const verifyEmail = require('../utils/verificationEmail')
+const forgotPasswordEmail = require('../utils/forgotPasswordEmail')
 
 const { BadRequestError, UnAuthorizedError, CustomError } = require('../errors')
 
@@ -112,7 +113,33 @@ const verifyByEmail = async (req, res) => {
 
   await user.save()
 
-  res.status(StatusCodes.OK).json({ msg: 'Verification was Successful' })
+  res.status(StatusCodes.OK).json({ message: 'Verification was Successful' })
 }
 
-module.exports = { register, login, verifyByEmail, logout }
+const forgotPassword = async (req, res) => {
+  const { email } = req.body
+  const user = await User.findOne({ email })
+
+  if (!user) {
+    throw new UnAuthorizedError(
+      `There is no user with provided email: ${email}`
+    )
+  }
+  const newPassword = crypto.randomBytes(10).toString('hex')
+
+  user.password = newPassword
+
+  await user.save()
+
+  await forgotPasswordEmail({
+    userName: user.firstName,
+    email: user.email,
+    newPassword,
+  })
+
+  res
+    .status(StatusCodes.OK)
+    .json({ message: 'New Password was sent to an email' })
+}
+
+module.exports = { register, login, verifyByEmail, forgotPassword, logout }
