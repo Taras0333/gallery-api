@@ -3,6 +3,7 @@ const { StatusCodes } = require('http-status-codes')
 const crypto = require('crypto')
 const { createJWT } = require('../utils/jwt')
 const createTokenUser = require('../utils/createTokenUser')
+const verifyEmail = require('../utils/verificationEmail')
 
 const { BadRequestError, UnAuthorizedError, CustomError } = require('../errors')
 
@@ -36,11 +37,18 @@ const register = async (req, res) => {
     throw new CustomError('Password is emply', StatusCodes.NOT_ACCEPTABLE)
   }
 
+  const verificationToken = crypto.randomBytes(40).toString('hex')
+
   let user = await User.create({
     ...body,
-    verificationToken: '',
-    isVerified: true,
-    verified: Date.now(),
+    verificationToken,
+  })
+
+  await verifyEmail({
+    userName: user.firstName,
+    email: user.email,
+    verificationToken: user.verificationToken,
+    origin: process.env.ORIGIN,
   })
 
   user = await User.findById(user.id).select(removedFields)
@@ -84,18 +92,18 @@ const logout = async (_, res) => {
   res.status(StatusCodes.OK).json({ message: 'User has logged out!' })
 }
 
-const verifyEmail = async (req, res) => {
-  const { verificationToken, email } = req.body
+const verifyByEmail = async (req, res) => {
+  const { verificationToken, email } = req.query
   const user = await User.findOne({ email })
 
   if (!user) {
-    throw new UnauthenticatedError(
+    throw new UnAuthorizedError(
       `There is no user with provided email: ${email}`
     )
   }
 
   if (user.verificationToken !== verificationToken) {
-    throw new UnauthenticatedError('Verification Failed')
+    throw new UnAuthorizedError('Verification Failed')
   }
 
   user.isVerified = true
@@ -107,4 +115,4 @@ const verifyEmail = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Verification was Successful' })
 }
 
-module.exports = { register, login, verifyEmail, logout }
+module.exports = { register, login, verifyByEmail, logout }

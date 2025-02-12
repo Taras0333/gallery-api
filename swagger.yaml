@@ -3,7 +3,7 @@ info:
   title: networker-back
   version: 1.0.0
 servers:
-  - url: http://https://networker-back.onrender.com
+  - url: https://networker-back.onrender.com
 tags:
   - name: auth
   - name: wake up
@@ -63,6 +63,28 @@ paths:
           description: Successful response
           content:
             application/json: {}
+  /api/v1/auth/verify-email:
+    get:
+      tags:
+        - auth
+      summary: Verify Email
+      parameters:
+        - name: verificationToken
+          in: query
+          schema:
+            type: string
+          example: >-
+            6a71cea056fedc379f40b8daa9dfddd6ad2ab6146d6b26f86fb8189aca754e70436d8f85a9c17379
+        - name: email
+          in: query
+          schema:
+            type: string
+          example: khomynt97@gmail.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
   /api/v1/wake-up:
     get:
       tags:
@@ -83,7 +105,7 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/v1/users/67a6160fe8c4009b3a15622e:
+  /api/v1/users/:id:
     get:
       tags:
         - users
