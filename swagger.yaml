@@ -4,6 +4,11 @@ info:
   version: 1.0.0
 servers:
   - url: https://networker-back.onrender.com
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
 tags:
   - name: auth
   - name: wake up
@@ -115,6 +120,8 @@ paths:
               example:
                 password: boba123
                 confirmPassword: boba123
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful response
@@ -150,11 +157,22 @@ paths:
           description: Successful response
           content:
             application/json: {}
-  /api/v1/users/passwords:
-    get:
+  /api/v1/users/update:
+    patch:
       tags:
         - users
-      summary: Get Users Passwords (privat)
+      summary: Update User (privat)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                postCode: 79-022
+                address: Mumu str. Lviv, Ukraine
+                firstName: Fufa
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Successful response

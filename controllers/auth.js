@@ -98,9 +98,7 @@ const verifyByEmail = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) {
-    throw new UnAuthorizedError(
-      `There is no user with provided email: ${email}`
-    )
+    throw new BadRequestError(`There is no user with provided email: ${email}`)
   }
 
   if (user.verificationToken !== verificationToken) {
@@ -121,9 +119,7 @@ const forgotPassword = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) {
-    throw new UnAuthorizedError(
-      `There is no user with provided email: ${email}`
-    )
+    throw new BadRequestError(`There is no user with provided email: ${email}`)
   }
   const newPassword = crypto.randomBytes(10).toString('hex')
 
@@ -151,9 +147,7 @@ const resetPassword = async (req, res) => {
   const user = await User.findOne({ email })
 
   if (!user) {
-    throw new UnAuthorizedError(
-      `There is no user with provided email: ${email}`
-    )
+    throw new BadRequestError(`There is no user with provided email: ${email}`)
   }
   if (password !== confirmPassword) {
     throw new BadRequestError('Passwords do not match. Please try again')
