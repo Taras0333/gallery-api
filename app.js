@@ -7,8 +7,13 @@ const xss = require('xss-clean')
 const limiter = require('express-rate-limit')
 const swaggerUI = require('swagger-ui-express')
 const YAML = require('yamljs')
-const endpointsDoc = YAML.load('./swagger.yaml')
 const cookieParser = require('cookie-parser')
+const morgan = require('morgan')
+
+const spinUpServer = require('./utils/serverSpinUp')
+const endpointsDoc = YAML.load('./swagger.yaml')
+const connectDB = require('./db/connection')
+const { allowedOrigins } = require('./const')
 
 const authRoute = require('./routes/auth')
 const usersRoute = require('./routes/users')
@@ -17,8 +22,6 @@ const wakeUpRoute = require('./routes/wakeUp')
 const errorHandler = require('./middleware/errorHandler')
 const notFound = require('./middleware/notFound')
 
-const connectDB = require('./db/connection')
-const morgan = require('morgan')
 const server = express()
 
 //middleware
@@ -28,13 +31,6 @@ server.use(morgan('tiny'))
 
 // security
 server.use(helmet())
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'http://localhost:8080',
-  'https://localhost:8080',
-  'https://networker-delta.vercel.app',
-]
 server.use(
   cors({
     origin: function (origin, callback) {
@@ -67,15 +63,4 @@ server.use(errorHandler)
 
 const port = process.env.PORT || 5001
 
-const spinUpServer = async () => {
-  try {
-    await connectDB(process.env.MONGO_URI)
-    console.log('db is connected')
-    server.listen(port, () => {
-      console.log(`The server is listening to port: ${port}`)
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
-spinUpServer()
+spinUpServer({ server, port, connectDB })
