@@ -3,7 +3,7 @@ info:
   title: gallery-api
   version: 1.0.0
 servers:
-  - url: https://networker-back.onrender.com
+  - url: https://gallery-api-kwa8.onrender.com
   - name: pictures
 paths:
   /api/v1/pictures:
