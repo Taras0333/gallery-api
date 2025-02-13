@@ -7,17 +7,11 @@ const xss = require('xss-clean')
 const limiter = require('express-rate-limit')
 const swaggerUI = require('swagger-ui-express')
 const YAML = require('yamljs')
-const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 
-const spinUpServer = require('./utils/serverSpinUp')
 const endpointsDoc = YAML.load('./swagger.yaml')
-const connectDB = require('./db/connection')
-const { allowedOrigins } = require('./const')
 
-const authRoute = require('./routes/auth')
-const usersRoute = require('./routes/users')
-const wakeUpRoute = require('./routes/wakeUp')
+const picturesRoute = require('./routes/pictures')
 
 const errorHandler = require('./middleware/errorHandler')
 const notFound = require('./middleware/notFound')
@@ -26,23 +20,11 @@ const server = express()
 
 //middleware
 server.use(express.json())
-server.use(cookieParser(process.env.JWT_SECRET))
 server.use(morgan('tiny'))
 
 // security
 server.use(helmet())
-server.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    },
-    credentials: true,
-  })
-)
+server.use(cors())
 server.use(xss())
 server.use(
   limiter({
@@ -52,9 +34,7 @@ server.use(
 )
 
 // routes
-server.use('/api/v1/auth', authRoute)
-server.use('/api/v1/users', usersRoute)
-server.use('/api/v1/wake-up', wakeUpRoute)
+server.use('/api/v1/pictures', picturesRoute)
 server.use('/swagger', swaggerUI.serve, swaggerUI.setup(endpointsDoc))
 
 // errors handle
@@ -63,4 +43,6 @@ server.use(errorHandler)
 
 const port = process.env.PORT || 5001
 
-spinUpServer({ server, port, connectDB })
+server.listen(port, () => {
+  console.log(`The server is listening to port: ${port}`)
+})
