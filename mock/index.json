@@ -9,6 +9,7 @@
       "documents_number": 3,
       "has_notifications": true,
       "status": "on_sale",
+      "views": 1000,
       "main_photo": {
         "id": "a8c7cfa6-817d-4f49-a94e-41ff3cc47ec8",
         "width": 8192,
@@ -66,6 +67,7 @@
       "documents_number": 1,
       "has_notifications": false,
       "status": "draft",
+      "views": 1789,
       "main_photo": {
         "id": "b4d3cfa6-123d-4e89-a47e-51ff3aa56bc8",
         "width": 5391,
@@ -123,6 +125,7 @@
       "documents_number": 0,
       "has_notifications": false,
       "status": null,
+      "views": 304,
       "main_photo": {
         "id": "c1d3cfa6-567d-4e89-b56e-61af3aa88cd8",
         "width": 7000,
