@@ -28,7 +28,7 @@ server.use(cors())
 server.use(xss())
 server.use(
   limiter({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 10 * 60 * 1000,
     limit: 100,
   })
 )
