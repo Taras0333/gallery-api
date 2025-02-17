@@ -1,10 +1,18 @@
-To start a server locally:
+# Express.js Application
 
-1. Install all dependencies with npm i
-2. Start a server loccaly with npm run dev
-3. Server would be listening port: 5001
+This is a **Express.js** that serves pictures data for testing project.
 
-You have two available routes:
+## Installation
 
-1. /swagger (routes map)
-2. /api/v1/pictures to gather a collection of pictures
+1. **Clone the repository**
+   git clone https://github.com/Taras0333/gallery-api.git
+2. **Go to folder gallery-app**
+   cd gallery-app
+
+3. **Install dependencies**
+   npm install
+
+4. **Start the development server**
+   npm run dev
+
+Or simple use https://gallery-api-kwa8.onrender.com, calls are allowed from any domain
